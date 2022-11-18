@@ -94,7 +94,7 @@ So, we want to generate a token, such that the plaintext/username equals "Ephvul
 
 Before breaking this, we'll look at weaker versions of the scheme, and see if we can break them.
 
-## Identity token scheme without encryption
+## 1. Identity token scheme without encryption
 The simplest scheme is just to send the unencrypted username:
 ```python
 def encrypt(self, plain):
@@ -106,7 +106,7 @@ This is trivial to break, because the attacker can just send the target plaintex
 
 ![Scenario: the plaintext is correct. The server returns success](simple_token_attack1.png)
 
-## Identity token scheme with xor encryption
+## 2. Identity token scheme with xor encryption
 The following scheme xors the plaintext with a pseudorandom block:
 ```python
 def encrypt(self, plain):
@@ -141,3 +141,34 @@ $C_2 = C_1 \oplus P_1 \oplus \text{"Ephvuln"}$
 Then:
 
 $P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"} = \text{"Ephvuln"}$
+
+Conclusion: Identity token scheme with xor encryption is not enough.
+
+## 3. Identity token scheme with AES encryption
+We saw that the previous scheme was not secure for known plaintexts. The good thing is that we already have encryption algorithms that are thought to be secure agains known-plaintext attacks.
+
+So, instead of xoring with a constant random block, the server can just encrypt the username with AES:
+```python
+def encrypt(self, plain):
+        cipher = self.INTEGRITY.encrypt(plain)
+        
+        return cipher
+```
+
+This can stiil be broken if an attacker does a **bruteforce attack**.
+
+The bruteforce approach would be viable if the text size is small enough. Currently, the text size for AES is 128 bits. Sadly, generating 2^128 messages is computationally **hard**.
+
+
+Conclusion: Identity token scheme with AES encryption is not proven to be insecure.
+
+## 4. Identity token scheme with truncated AES encryption
+The upside is that the server doesn't use the full AES encryption. It truncates the encrypted block:
+```python
+def encrypt(self, plain):
+        cipher = self.INTEGRITY.encrypt(plain)[0:INTEGRITY_LEN]
+        
+        return cipher
+```
+
+If the integrity len is low enough, this can be broken with a bruteforce attack.
