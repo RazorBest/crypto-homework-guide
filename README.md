@@ -14,6 +14,7 @@ So, the attacker gets the guest token, which corresponds to the guest user. Then
 The final purpose is to send a login token to the server such that it responds with "success". In reality, the success message contains a secret flag.
 
 Most of the time, the server will respond with a fail message:
+
 ![Server sends a fail message](/crypto_attacker2_fail.drawio.png)
 
 The attacker wants the server to send a success message. If this happens, the attack will be over.
