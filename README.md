@@ -43,4 +43,14 @@ From e general perspective, the scheme is made such that:
    - generate a unique, secret token for a user
    - a user can request a token corresponding to its username
    - a user can send back the token to prove their identity
-   - a user can't generate a token for another user
+   - **a user can't generate a token for another user**
+
+We want to break the last checkpoint. Before doing this, we'll look at weaker versions of the scheme and see if we can break them.
+
+## Identity token scheme without encryption
+The simplest scheme is just to send the unencrypted username:
+```python
+def encrypt(self, plain):
+        cipher = plain
+        return plain
+```
