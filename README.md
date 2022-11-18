@@ -7,4 +7,4 @@ We are given the source code of the server, server.py. If we look at it, the ser
 
 To understand this better, I drew the server-attacker model:
 
-![Attacker model](/img/export.png)
+![Attacker model](/crypto_attacker_model1.png)
