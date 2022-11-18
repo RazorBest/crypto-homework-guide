@@ -19,3 +19,20 @@ Most of the time, the server will respond with a fail message:
 
 The attacker wants the server to send a success message. If this happens, the attack will be over.
 ![Server sends a success message](/crypto_attacker2_success.png)
+
+## A depper look into how the token is computed
+
+In order to build an attack, we have to understand how the server encrypts the data. And see if the encryption protocol has a flaw.
+
+The python source code related to how the token is built, looks like this:
+```python
+def encrypt(self, plain):
+        rnd = self.C.encrypt(self.IV)
+        cipher = byte_xor(plain, rnd) + SERVER_PUBLIC_BANNER + self.getIntegrity(plain)
+        return cipher
+```
+
+We'll say that our token is the cipher. As you can see, the token is made out of 3 parts:
+  - the ecnrypted plaintext
+  - a fixed public banner
+  - an integrity tag
