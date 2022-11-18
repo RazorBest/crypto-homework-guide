@@ -77,7 +77,20 @@ As we can see, the the server:
  
 ![How the server verifies the identity token](/server_token_verification.png)
 
-We'll look at weaker versions of the scheme, first, and see if we can break them.
+But this is not all. The plaintext has to have some wanted value. That is the username of the user we want to impersonate. In our case, the server sends a "success" message when the username is "Ephvuln":
+```python
+def login():
+  ...
+  plain = C.decrypt(cipher)
+  ...
+  elif plain == b"Ephvuln":
+            print("Secret:", FLAG)
+  ...
+```
+
+So, we want to generate a token, such that the plaintext/username equals "Ephvuln".
+
+Before breaking this, we'll look at weaker versions of the scheme, and see if we can break them.
 
 ## Identity token scheme without encryption
 The simplest scheme is just to send the unencrypted username:
