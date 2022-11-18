@@ -31,6 +31,7 @@ def encrypt(self, plain):
         cipher = byte_xor(plain, rnd) + SERVER_PUBLIC_BANNER + self.getIntegrity(plain)
         return cipher
 ```
+It is an encrypt function, that receives a plaintext and returns the ciphertext. In our case, the plaintext is a username.
 
 We'll say that our token is the cipher. As you can see, the token is made out of 3 parts:
   - the ecnrypted plaintext
@@ -45,7 +46,28 @@ From e general perspective, the scheme is made such that:
    - a user can send back the token to prove their identity
    - **a user can't generate a token for another user**
 
-We want to break the last checkpoint. Before doing this, we'll look at weaker versions of the scheme and see if we can break them.
+We want to somehow break the last checkpoint. 
+
+## How does the server verify the token
+
+Looking at the drawn attacker model, we see that the server receives a login/identity token from the attacker. Then it verifies it. If it returns true, the server will return "success". So in order to see how we can break the scheme, we need to understand the internals of the verification.
+
+The verification in server.py depends on the decrypt function, that receives a token:
+```python
+def decrypt(self, input):
+        rnd = self.C.encrypt(self.IV)
+        secret_len = INTEGRITY_LEN + len(SERVER_PUBLIC_BANNER)
+        cipher, secret, tag = input[:-secret_len], input[-secret_len:-INTEGRITY_LEN], input[-INTEGRITY_LEN:]
+        plain = byte_xor(cipher, rnd)
+        if secret != SERVER_PUBLIC_BANNER:
+            return -1
+        if self.getIntegrity(plain) != tag:
+            return None
+ 
+        return plain
+```
+
+We'll look at weaker versions of the scheme, first, and see if we can break them.
 
 ## Identity token scheme without encryption
 The simplest scheme is just to send the unencrypted username:
