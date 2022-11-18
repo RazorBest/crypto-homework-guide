@@ -38,3 +38,9 @@ We'll say that our token is the cipher. As you can see, the token is made out of
   - an integrity tag
   
 ![The internals of the identity token](/secret_token_form.drawio.png)
+
+From e general perspective, the scheme is made such that:
+   - generate a unique, secret token for a user
+   - a user can request a token corresponding to its username
+   - a user can send back the token to prove their identity
+   - a user can't generate a token for another user
