@@ -55,16 +55,16 @@ Looking at the drawn attacker model, we see that the server receives a login/ide
 The verification in server.py depends on the decrypt function, that receives a token:
 ```python
 def decrypt(self, input):
-        rnd = self.C.encrypt(self.IV)
-        secret_len = INTEGRITY_LEN + len(SERVER_PUBLIC_BANNER)
-        cipher, secret, tag = input[:-secret_len], input[-secret_len:-INTEGRITY_LEN], input[-INTEGRITY_LEN:]
-        plain = byte_xor(cipher, rnd)
-        if secret != SERVER_PUBLIC_BANNER:
-            return -1
-        if self.getIntegrity(plain) != tag:
-            return None
- 
-        return plain
+    rnd = self.C.encrypt(self.IV)
+    secret_len = INTEGRITY_LEN + len(SERVER_PUBLIC_BANNER)
+    cipher, secret, tag = input[:-secret_len], input[-secret_len:-INTEGRITY_LEN], input[-INTEGRITY_LEN:]
+    plain = byte_xor(cipher, rnd)
+    if secret != SERVER_PUBLIC_BANNER:
+        return -1
+    if self.getIntegrity(plain) != tag:
+        return None
+
+    return plain
 ```
 
 As we can see, the the server:
@@ -84,7 +84,7 @@ def login():
   plain = C.decrypt(cipher)
   ...
   elif plain == b"Ephvuln":
-            print("Secret:", FLAG)
+      print("Secret:", FLAG)
   ...
 ```
 
@@ -98,8 +98,8 @@ Before breaking this, we'll look at weaker versions of the scheme, and see if we
 The simplest scheme is just to send the unencrypted username:
 ```python
 def encrypt(self, plain):
-        cipher = plain
-        return cipher
+    cipher = plain
+    return cipher
 ```
 
 This is trivial to break, because the attacker can just send the target plaintext, "Ephvuln". The server will check that it equals to "Ephvuln" and return the flag.
@@ -110,10 +110,10 @@ This is trivial to break, because the attacker can just send the target plaintex
 The following scheme xors the plaintext with a pseudorandom block:
 ```python
 def encrypt(self, plain):
-        rnd = self.C.encrypt(self.IV)
-        cipher = byte_xor(plain, rnd)
-        
-        return cipher
+    rnd = self.C.encrypt(self.IV)
+    cipher = byte_xor(plain, rnd)
+
+    return cipher
 ```
 Pay attention that we're not using the public banner or the integrity tag, yet. This is just a plain xor.
 
@@ -140,8 +140,7 @@ $C_2 = C_1 \oplus P_1 \oplus \text{"Ephvuln"}$
 
 Then:
 
-$P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"}$
-$P_2 = \text{"Ephvuln"}$
+$P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"} = \text{"Ephvuln"}$
 
 Conclusion: Identity token scheme with xor encryption is not enough.
 
@@ -151,9 +150,9 @@ We saw that the previous scheme was not secure for known plaintexts. The good th
 So, instead of xoring with a constant random block, the server can just encrypt the username with AES:
 ```python
 def encrypt(self, plain):
-        cipher = self.INTEGRITY.encrypt(plain)
+    cipher = self.INTEGRITY.encrypt(plain)
         
-        return cipher
+    return cipher
 ```
 
 This can stiil be broken if an attacker does a **bruteforce attack**.
@@ -164,12 +163,29 @@ The bruteforce approach would be viable if the text size is small enough. Curren
 Conclusion: Identity token scheme with AES encryption is not proven to be insecure.
 
 ## 4. Identity token scheme with truncated AES encryption
-The upside is that the server doesn't use the full AES encryption. It truncates the encrypted block:
+The upside (for the attacker) is that the server doesn't use the full AES encryption. It truncates the encrypted block:
 ```python
 def encrypt(self, plain):
-        cipher = self.INTEGRITY.encrypt(plain)[0:INTEGRITY_LEN]
+    cipher = self.INTEGRITY.encrypt(plain)[0:INTEGRITY_LEN]
         
-        return cipher
+    return cipher
 ```
 
 If the integrity len is low enough, this can be broken with a bruteforce attack.
+
+![Attack scenario with a bruteforce attack](/attack4.png)
+
+But this is not what the server does. It doesn't just truncate the plaintext.
+
+## 5. Identity token scheme with xor encryption and integrity tag from truncated AES encryption
+We'll look at the combination of schemes 2 and 4. Meaning: the encryption is done with xor. But the integrity is done by encrypting the plaintext with AES:
+```python
+def getIntegrity(self, plain):
+    return self.INTEGRITY.encrypt(b'\x00' * (AES_KEY_SIZE - len(plain)) + plain)[0:INTEGRITY_LEN]
+    
+def encrypt(self, plain):
+    cipher = byte_xor(plain, rnd) + self.getIntegrity(plain)
+    return cipher
+```
+
+If we use the known-plaintext attack from 2, we can manipulate the first half of the cipher. But, we can't manipulate the second half. The server will check the integrity and says that it's wrong.
