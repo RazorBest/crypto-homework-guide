@@ -1,4 +1,4 @@
-# Guide for first homework of the cryptography course
+# Guide for the first homework of the cryptography course
 
 This is an assigmnent for the cryptography course. We have to implement some chose ciphertext attacks in a client-server model.
 We are given the source code of the server, server.py. If we look at it, the server gives us 2 options:
@@ -12,3 +12,9 @@ To understand this better, I drew the server-attacker model:
 So, the attacker gets the guest token, which corresponds to the guest user. Then, it generates new tokens, sends them to the server and checks if the server responds with "fail" or "success".
 
 The final purpose is to send a login token to the server such that it responds with "success". In reality, the success message contains a secret flag.
+
+Most of the time, the server will respond with a fail message:
+![Server sends a fail message](/crypto_attacker2_fail.drawio.png)
+
+The attacker wants the server to send a success message. If this happens, the attack will be over.
+![Server sends a success message](/crypto_attacker2_success.png)
