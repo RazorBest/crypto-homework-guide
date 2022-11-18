@@ -101,3 +101,7 @@ def encrypt(self, plain):
         cipher = plain
         return plain
 ```
+
+This is trivial to break, because the attacker can just send the target plaintext, "Ephvuln". The server will check that it equals to "Ephvuln" and return the flag.
+
+![Scenario: the plaintext is correct. The server returns success](simple_token_attack1.png)
