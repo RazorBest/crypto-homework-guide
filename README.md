@@ -200,3 +200,32 @@ This means that if we want to change the cipher, we also have to change the inte
 So, to break the current scheme: the attacker has to generate a ciphertext from a known plain-ciphertext pair. After that, it will generate the token with every possible integrity block and send them to the server. One of the integrities should be the correct integrity for "Ephvuln":
 
 ![Attacker tampers ciphertext and bruteforces the integrity](/attack5_success.png)
+
+Conclusion: the current scheme is succeptible to known-plaintext + bruteforce attack.
+
+## Wrapping things up
+
+We looked at variations of the token generation schemes. And we saw that xoring with constants is bad for doing one time things. Using small blocks is bad because we can bruteforce them.
+
+The server's encryption scheme is similar to variation 5, that's descibed above. In addition, it inserts a SERVER PUBLIC BANNER in the middle, that's just a constant string.
+
+After getting the guest token, the attacker knows the following:
+  - The username of the guest: "Anonymous"
+  - The guest token (and its lenght)
+  - The wanted username: "Ephvuln"
+  - The server.py source code
+
+The things that the attacker doesn't know:
+   - The SPB (Server Public Banner)
+   - The length of the SPB
+   - The length of the integrity
+   - The integrity tag for "Ephvuln"
+
+The attack has 3 main phases:
+  1. Generate the ciphertext for "Ephvuln"
+  2. Guess the length of the SPB or the integrity
+  3. Bruteforce the integrity
+
+That second step might sound a little like magic. The good thing is that the SPB is send as plaintext. The problem: it's concatenated with integrity and we don't know either of their lengths.
+
+![The attacker can extract the cipher text but he can't extract the SPB](/token_split.png)
