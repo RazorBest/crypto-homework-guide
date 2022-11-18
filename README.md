@@ -34,7 +34,7 @@ def encrypt(self, plain):
 It is an encrypt function, that receives a plaintext and returns the ciphertext. In our case, the plaintext is a username.
 
 We'll say that our token is the cipher. As you can see, the token is made out of 3 parts:
-  - the ecnrypted plaintext
+  - the encrypted plaintext
   - a fixed public banner
   - an integrity tag
   
