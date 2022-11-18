@@ -1,6 +1,6 @@
 # Guide for the first homework of the cryptography course
 
-This is an assigmnent for the cryptography course. We have to implement some chose ciphertext attacks in a client-server model.
+This is an assigmnent for the cryptography course. We have to implement a chosen ciphertext attack in a client-server model.
 We are given the source code of the server, server.py. If we look at it, the server gives us 2 options:
   - get a guest token
   - send a token and verify it
