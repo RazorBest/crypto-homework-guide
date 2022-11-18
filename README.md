@@ -235,3 +235,7 @@ Possible solution: try every length, starting for the SPB, from its maximum leng
 There is a better way than trying the bruteforce attack for each possible SPB length. But I'll let you find it ;)
 
 ![Try every length for SPB](/attack_split.png)
+
+The bruteforce, which is the **final attack**, looks like this:
+
+![Try every length for SPB](/final_attack.png)
