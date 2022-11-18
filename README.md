@@ -140,7 +140,8 @@ $C_2 = C_1 \oplus P_1 \oplus \text{"Ephvuln"}$
 
 Then:
 
-$P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"} = \text{"Ephvuln"}$
+$P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"}$
+$P_2 = \text{"Ephvuln"}$
 
 Conclusion: Identity token scheme with xor encryption is not enough.
 
