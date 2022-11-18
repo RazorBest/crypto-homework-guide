@@ -123,4 +123,8 @@ This scheme is basically a OTP. So as long as its used once, we're fine. But in 
 
 ![Second try for an encryption scheme for the token](token2.png)
 
-Since the attacker can request the guest token, it means that he has access to a message-ciphertext pair. That is: the encryption of the guest username.
+Since the attacker can request the guest token, it means that he has access to a message-ciphertext pair. That is: the encryption of the guest username. By knowing these, he can generate a new cipheretext that decrypts to whatever he wants.
+
+The attack is a known-plaintext attack with only one plantext-ciphertext pair. It is based on the properties of xor:
+![Second try for an encryption scheme for the token](attack2.png)
+![Second try for an encryption scheme for the token](attack2_part2.png)
