@@ -127,4 +127,17 @@ Since the attacker can request the guest token, it means that he has access to a
 
 The attack is a known-plaintext attack with only one plantext-ciphertext pair. It is based on the properties of xor:
 ![Second try for an encryption scheme for the token](attack2.png)
+
 ![Second try for an encryption scheme for the token](attack2_part2.png)
+
+As you can see from the above picture, the attacker will send a ciphertext that will be decrypted to "Ephvuln". It constructs the ciphertext by xoring plaintext1 and ciphertex1; which are taken from the known plaintext-ciphertext pair.
+
+$C_1 = E(k, IV) \oplus P_1$
+
+If:
+
+$C_2 = C_1 \oplus P_1 \oplus \text{"Ephvuln"}$
+
+Then:
+
+$P_2 = E(k, IV) \oplus C_2 = E(k, IV) \oplus C_1 \oplus P_1 \oplus \text{"Ephvuln"} = E(k, IV) \oplus E(k, IV) \oplus P_1 \oplus P_1 \oplus \text{"Ephvuln"} = \text{"Ephvuln"}$
