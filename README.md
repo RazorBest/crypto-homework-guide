@@ -90,6 +90,8 @@ def login():
 
 So, we want to generate a token, such that the plaintext/username equals "Ephvuln".
 
+![Scenario: the plaintext is correct. The server returns success](correct_plaintext.png)
+
 Before breaking this, we'll look at weaker versions of the scheme, and see if we can break them.
 
 ## Identity token scheme without encryption
