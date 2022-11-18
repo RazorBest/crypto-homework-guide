@@ -6,3 +6,5 @@ We are given the source code of the server, server.py. If we look at it, the ser
   - send a token and verify it
 
 To understand this better, I drew the server-attacker model:
+
+![Attacker model](/img/export.png)
