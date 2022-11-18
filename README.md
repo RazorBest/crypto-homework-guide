@@ -191,3 +191,6 @@ def encrypt(self, plain):
 ```
 
 If we use the known-plaintext attack from 2, we can manipulate the first half of the cipher. But, we can't manipulate the second half. The server will check the integrity and says that it's wrong.
+
+
+![Attack tries to modify the ciphertext but fails because of the integrity check](/attack5_fail.png)
