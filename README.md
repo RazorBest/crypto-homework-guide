@@ -226,6 +226,12 @@ The attack has 3 main phases:
   2. Guess the length of the SPB or the integrity
   3. Bruteforce the integrity
 
-That second step might sound a little like magic. The good thing is that the SPB is send as plaintext. The problem: it's concatenated with integrity and we don't know either of their lengths.
+That second step might sound a little like magic. The good thing is that the SPB is sent as plaintext. The problem: it's concatenated with integrity and we don't know either of their lengths.
 
 ![The attacker can extract the cipher text but he can't extract the SPB](/token_split.png)
+
+Possible solution: try every length, starting for the SPB, from its maximum length. And, for each case, bruteforce the integrity. The shorter the SPB, the harder will be to get the integrity.
+
+There is a better way than trying the bruteforce attack for each possible SPB length. But I'll let you find it ;)
+
+![Try every length for SPB](/attack_split.png)
