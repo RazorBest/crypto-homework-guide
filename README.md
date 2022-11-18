@@ -36,3 +36,5 @@ We'll say that our token is the cipher. As you can see, the token is made out of
   - the ecnrypted plaintext
   - a fixed public banner
   - an integrity tag
+  
+![The internals of the identity token](/secret_token_form.drawio.png)
