@@ -67,6 +67,16 @@ def decrypt(self, input):
         return plain
 ```
 
+As we can see, the the server:
+  - splits the token in 3
+  - it xors the first part with `rnd=E(k, IV)`, which is the same that was used for generating the token
+  - it checks if the second part equals to SPB (SERVER_PUBLIC_TOKEN)
+  - it computes the integrity of the received plaintext
+  - it checks to see if the last part (the integrity tag) equals the computed integrity
+  - if the verifications succed, it returns the plaintext
+ 
+![How the server verifies the identity token](/server_token_verification.png)
+
 We'll look at weaker versions of the scheme, first, and see if we can break them.
 
 ## Identity token scheme without encryption
