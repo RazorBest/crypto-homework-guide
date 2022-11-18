@@ -193,9 +193,10 @@ def encrypt(self, plain):
 If we use the known-plaintext attack from 2, we can manipulate the first half of the cipher. But, we can't manipulate the second half. The server will check the integrity and say that it's wrong.
 
 
-![Attack tries to modify the ciphertext but fails because of the integrity check](/attack5_fail.png)
+![Attacker tries to modify the ciphertext but fails because of the integrity check](/attack5_fail.png)
 
 This means that if we want to change the cipher, we also have to change the integrity. We have to mention here that the integrity is generated exactly like in scheme 4: by encrypting the plaintext and truncating it.
 
 So, to break the current scheme: the attacker has to generate a ciphertext from a known plain-ciphertext pair. After that, it will generate the token with every possible integrity block and send them to the server. One of the integrities should be the correct integrity for "Ephvuln":
 
+![Attacker tampers ciphertext and bruteforces the integrity](/attack5_success.png)
