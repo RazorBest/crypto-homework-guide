@@ -157,7 +157,7 @@ def encrypt(self, plain):
     return cipher
 ```
 
-This can stiil be broken if an attacker does a **bruteforce attack**.
+This can still be broken if an attacker does a **bruteforce attack**.
 
 The bruteforce approach would be viable if the text size is small enough. Currently, the text size for AES is 128 bits. Sadly, generating 2^128 messages is computationally **hard**.
 
