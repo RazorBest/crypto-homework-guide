@@ -230,7 +230,7 @@ That second step might sound a little like magic. The good thing is that the SPB
 
 ![The attacker can extract the cipher text but he can't extract the SPB](/token_split.png)
 
-Possible solution: try every length, starting for the SPB, from its maximum length. And, for each case, bruteforce the integrity. The shorter the SPB, the harder will be to get the integrity.
+Possible solution: try every length, starting for the SPB, from its maximum length. And, for each case, bruteforce the integrity. The shorter the SPB, the harder will be to get the integrity. If we get a success message, we stop.
 
 There is a better way than trying the bruteforce attack for each possible SPB length. But I'll let you find it ;)
 
